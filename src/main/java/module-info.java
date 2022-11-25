@@ -5,6 +5,6 @@ module com.mkenit.timemanager {
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.mkenit.timemanager to javafx.fxml;
+    opens com.mkenit.timemanager.templates to javafx.fxml;
     exports com.mkenit.timemanager;
 }

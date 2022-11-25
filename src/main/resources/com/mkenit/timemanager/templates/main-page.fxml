@@ -15,7 +15,7 @@
          <left>
             <VBox prefHeight="540.0" prefWidth="207.0" style="-fx-background-color: #282828;" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Все задачи" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@../css/main-page-style.css" text="Все задачи" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -23,7 +23,7 @@
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Сегодня" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@../css/main-page-style.css" text="Сегодня" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
@@ -31,19 +31,19 @@
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Таймер" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@../css/main-page-style.css" text="Таймер" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@img/stopwatch.png" />
+                              <Image url="@../img/stopwatch.png" />
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Натсройки" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@../css/main-page-style.css" text="Натсройки" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
