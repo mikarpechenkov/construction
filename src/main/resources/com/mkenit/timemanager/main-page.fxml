@@ -2,43 +2,60 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mkenit.timemanager.StudyScheduleScene">
    <children>
       <BorderPane prefHeight="540.0" prefWidth="960.0">
          <left>
-            <VBox prefHeight="540.0" prefWidth="241.0" style="-fx-background-color: #282828;" BorderPane.alignment="CENTER">
+            <VBox prefHeight="540.0" prefWidth="207.0" style="-fx-background-color: #282828;" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="274.0" stylesheets="@css/style.css" text="Все задачи" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Все задачи" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="274.0" stylesheets="@css/style.css" text="Текущий день" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Сегодня" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="244.0" stylesheets="@css/style.css" text="Таймер" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Таймер" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@img/stopwatch.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="244.0" stylesheets="@css/style.css" text="Настройки" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@css/style.css" text="Натсройки" textFill="WHITE">
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </graphic>
                   </Button>
                </children>
             </VBox>
          </left>
          <center>
-            <VBox prefHeight="379.0" prefWidth="227.0" style="-fx-background-color: #131420;" BorderPane.alignment="CENTER" />
+            <VBox prefHeight="540.0" prefWidth="183.0" style="-fx-background-color: #131420;" BorderPane.alignment="CENTER" />
          </center>
          <right>
             <Pane prefHeight="540.0" prefWidth="504.0" style="-fx-background-color: #131420;" BorderPane.alignment="CENTER" />
