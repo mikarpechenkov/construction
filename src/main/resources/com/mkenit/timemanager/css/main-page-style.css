@@ -39,3 +39,34 @@
     -fx-background-radius: 1px 1px 1px 1px;
     -fx-text-fill: #FFFFFF;
 }
+
+.combo-box .text{
+    -fx-font-size: 60;
+}
+
+.combo-box .cell:selected {
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+.combo-box .list-view .list-cell .text {
+    -fx-font-size: 30;
+}
+.combo-box{
+    -fx-background-color:  #282828;
+    -fx-text-alignment: center;
+}
+.combo-box-popup .list-cell {
+    -fx-background-color:  #282828;
+    -fx-font-size: 30;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+}
+
+.combo-box .arrow, .combo-box .arrow-button{
+    -fx-background-color: transparent;
+}
+
+
+
+
