@@ -18,7 +18,7 @@
    <children>
       <BorderPane prefHeight="540.0" prefWidth="960.0" stylesheets="@../css/main-page-style.css">
          <left>
-            <VBox prefHeight="540.0" prefWidth="207.0" style="-fx-background-color: #282828;" BorderPane.alignment="CENTER">
+            <VBox prefHeight="540.0" prefWidth="207.0" style="-fx-background-color: #282828;" stylesheets="@../css/main-page-style.css" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="210.0" stylesheets="@../css/main-page-style.css" text="Все задачи" textFill="WHITE">
                      <padding>
@@ -105,21 +105,29 @@
                                                 <RowConstraints maxHeight="92.60001220703126" minHeight="10.0" prefHeight="63.20001220703125" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label fx:id="outputMinutes" alignment="CENTER" contentDisplay="CENTER" prefHeight="134.0" prefWidth="137.0" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1">
-                                                   <font>
-                                                      <Font size="60.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label fx:id="outputSeconds" alignment="CENTER" contentDisplay="CENTER" prefHeight="130.0" prefWidth="135.0" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3">
-                                                   <font>
-                                                      <Font size="60.0" />
-                                                   </font>
-                                                </Label>
                                                 <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="137.0" prefWidth="22.0" text=":" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="2">
                                                    <font>
                                                       <Font size="60.0" />
                                                    </font>
                                                 </Label>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                                   <children>
+                                                      <Label fx:id="outputMinutes" alignment="CENTER" layoutX="65.0" layoutY="82.0" prefHeight="133.6" prefWidth="130.4" text="00" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <font>
+                                                            <Font size="60.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </AnchorPane>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
+                                                   <children>
+                                                      <Label fx:id="outputSeconds" alignment="CENTER" layoutX="-25.0" layoutY="-8.0" prefHeight="133.6" prefWidth="130.4" text="00" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <font>
+                                                            <Font size="60.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </AnchorPane>
                                              </children>
                                           </GridPane>
                                           <GridPane GridPane.rowIndex="1">

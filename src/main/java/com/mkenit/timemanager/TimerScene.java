@@ -1,7 +1,10 @@
 package com.mkenit.timemanager;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -10,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -19,6 +24,8 @@ import java.util.TreeMap;
 
 public class TimerScene implements Initializable {
 
+    public static final int MAX_MINUTES = 180;
+
     @FXML
     private Button cancelButton;
 
@@ -26,7 +33,7 @@ public class TimerScene implements Initializable {
     private AnchorPane displayTimerPane;
 
     @FXML
-    private ComboBox<Integer> minutesInput;
+    private ComboBox<String> minutesInput;
 
     @FXML
     private Label outputMinutes;
@@ -35,7 +42,7 @@ public class TimerScene implements Initializable {
     private Label outputSeconds;
 
     @FXML
-    private ComboBox<Integer> secondsInput;
+    private ComboBox<String> secondsInput;
 
     @FXML
     private AnchorPane setupTimerPane;
@@ -46,79 +53,81 @@ public class TimerScene implements Initializable {
     @FXML
     private Button timerMenuItem;
 
+
     private TreeMap<Integer, String> timerDisplayMap;
     private int currentSecond;
 
-    private Thread timerThread;
+    private Timeline timerTimeline;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<Integer> minutesList = FXCollections.observableArrayList();
-        ObservableList<Integer> secondsList = FXCollections.observableArrayList();
+        ObservableList<String> minutesList = FXCollections.observableArrayList();
+        ObservableList<String> secondsList = FXCollections.observableArrayList();
+
         //Заполняем наши листы для комбобоксов значениями
-        for (int i = 0; i <= 180; i++) {
-            if (i >= 0 && i <= 60)
-                secondsList.add(i);
-            minutesList.add(i);
+        for (int i = 0; i <= MAX_MINUTES; i++) {
+            if (i <= 9){
+                minutesList.add("0" + i);
+                secondsList.add("0"+i);
+            }else {
+                if(i<=60)
+                    secondsList.add(String.valueOf(i));
+                minutesList.add(String.valueOf(i));
+            }
         }
         //Добавляем пункты в комбобоксы
         minutesInput.setItems(minutesList);
-        minutesInput.setValue(0);
+        minutesInput.setValue("00");
         secondsInput.setItems(secondsList);
-        secondsInput.setValue(0);
+        secondsInput.setValue("00");
 
         //Делаем числовое представление красивым
         timerDisplayMap = new TreeMap<>();
-        for (int i = 0; i <= 60; i++)
+        for (int i = 0; i <= MAX_MINUTES; i++)
             if (i >= 0 && i < 10)
                 timerDisplayMap.put(i, "0" + i);
             else
-                timerDisplayMap.put(i,String.valueOf(i));
+                timerDisplayMap.put(i, String.valueOf(i));
 
     }
 
     public void startButtonClick() {
-        currentSecond=minutesToSeconds(minutesInput.getValue(),secondsInput.getValue());
-        minutesInput.setValue(0);
-        secondsInput.setValue(0);
-        scrollUp();
+        currentSecond = minutesToSeconds(Integer.parseInt(minutesInput.getValue()),
+                Integer.parseInt(secondsInput.getValue()));
+        if (currentSecond != 0)
+            scrollUp();
         try {
             startCountdown();
-        }catch (Exception ex){ }
+        } catch (Exception ex) {
+        }
     }
 
     public void cancelButtonClick() {
         try {
-            timerThread.interrupt();
+            timerTimeline.stop();
+        } catch (Exception ex) {
         }
-        catch (Exception ex){}
         scrollDown();
     }
 
-    private void startCountdown(){
-        timerThread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    while (currentSecond!=0){
-                        setTimerValues();
-                        Thread.sleep(1000);
-                        currentSecond--;
-                    }
-                    scrollDown();
-                    timerThread.interrupt();
-                }catch (Exception ex){  }
+    private void startCountdown() {
+        timerTimeline = new Timeline(new KeyFrame(Duration.seconds(0), event -> {
+            try {
+                setTimerValues();
+                currentSecond--;
+            } catch (Exception ex) {
             }
-        });
-        timerThread.start();
+        }), new KeyFrame(Duration.seconds(1)));
+        timerTimeline.setCycleCount(currentSecond);
+        timerTimeline.play();
+        timerTimeline.setOnFinished(event -> scrollDown());
     }
 
+
     private void setTimerValues() {
-        HashMap minutesAndSeconds=secondsToMinutes(currentSecond);
-        System.out.println(minutesAndSeconds.get("minutes")+"-"+timerDisplayMap.get(minutesAndSeconds.get("seconds")));
-        System.out.println(outputMinutes.getText());
-//        outputMinutes.setText(minutesAndSeconds.get("minutes").toString());
-//        outputSeconds.setText(timerDisplayMap.get(minutesAndSeconds.get("seconds")));
+        HashMap<String, Integer> minutesAndSeconds = secondsToMinutes(currentSecond);
+        outputSeconds.setText(timerDisplayMap.get(minutesAndSeconds.get("seconds")));
+        outputMinutes.setText(timerDisplayMap.get(minutesAndSeconds.get("minutes")));
     }
 
     //Анимация для смены Пэйнов таймера
@@ -160,16 +169,16 @@ public class TimerScene implements Initializable {
         parallelTransition.play();
     }
 
-    private int minutesToSeconds(int minutes, int seconds){
-        return minutes*60+seconds;
+    private int minutesToSeconds(int minutes, int seconds) {
+        return minutes * 60 + seconds;
     }
 
-    private HashMap<String,Integer> secondsToMinutes(int currentSecond){
-        int minutes=currentSecond/60;
-        int second=currentSecond%60;
-        HashMap<String,Integer> minutesAndSeconds=new HashMap<>();
-        minutesAndSeconds.put("minutes",minutes);
-        minutesAndSeconds.put("seconds",currentSecond);
-        return  minutesAndSeconds;
+    private HashMap<String, Integer> secondsToMinutes(int currentSecond) {
+        int minutes = currentSecond / 60;
+        currentSecond = currentSecond % 60;
+        HashMap<String, Integer> minutesAndSeconds = new HashMap<>();
+        minutesAndSeconds.put("minutes", minutes);
+        minutesAndSeconds.put("seconds", currentSecond);
+        return minutesAndSeconds;
     }
 }

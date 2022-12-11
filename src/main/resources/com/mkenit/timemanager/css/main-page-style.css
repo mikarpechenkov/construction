@@ -40,8 +40,8 @@
     -fx-text-fill: #FFFFFF;
 }
 
-.combo-box .text{
-    -fx-font-size: 60;
+.combo-box .text {
+    -fx-font-size: 54;
 }
 
 .combo-box .cell:selected {
@@ -52,21 +52,19 @@
 .combo-box .list-view .list-cell .text {
     -fx-font-size: 30;
 }
-.combo-box{
-    -fx-background-color:  #282828;
+
+.combo-box {
+    -fx-background-color: #282828;
     -fx-text-alignment: center;
 }
+
 .combo-box-popup .list-cell {
-    -fx-background-color:  #282828;
+    -fx-background-color: #282828;
     -fx-font-size: 30;
     -fx-text-fill: white;
     -fx-alignment: center;
 }
 
-.combo-box .arrow, .combo-box .arrow-button{
+.combo-box .arrow, .combo-box .arrow-button {
     -fx-background-color: transparent;
 }
-
-
-
-
