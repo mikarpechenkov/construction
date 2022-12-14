@@ -13,8 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -53,8 +51,8 @@ public class TimerScene implements Initializable {
     @FXML
     private Button timerMenuItem;
 
-
     private TreeMap<Integer, String> timerDisplayMap;
+
     private int currentSecond;
 
     private Timeline timerTimeline;
