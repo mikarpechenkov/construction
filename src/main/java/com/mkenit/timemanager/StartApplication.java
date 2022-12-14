@@ -12,7 +12,7 @@ public class StartApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("templates/Timer.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("templates/CurrentDay.fxml"));
         Parent root=fxmlLoader.load();
         Scene scene = new Scene(root, 960, 540);
         stage.setTitle("Текущие задачи");
