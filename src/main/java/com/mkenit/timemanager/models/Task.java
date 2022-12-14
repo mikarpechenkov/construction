@@ -7,14 +7,14 @@ public class Task {
     String name="Без названия";
     GregorianCalendar startTime=new GregorianCalendar();
     Duration duration=Duration.minutes(1);
-    Priority priority=Priority.ORDINARY_IMPORTANT;
+    Priority importance=Priority.ORDINARY_IMPORTANT;
     boolean status=false;
 
-    public Task(String name, GregorianCalendar startTime, Duration duration, Priority priority) {
+    public Task(String name, GregorianCalendar startTime, Duration duration, Priority importance) {
         this.name = name;
         this.startTime = startTime;
         this.duration = duration;
-        this.priority = priority;
+        this.importance = importance;
     }
 
     public Task() {}
