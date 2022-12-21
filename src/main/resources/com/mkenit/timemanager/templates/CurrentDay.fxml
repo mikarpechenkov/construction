@@ -98,9 +98,9 @@
                                  <children>
                                     <TableView fx:id="tableOfTasks" prefHeight="374.4" prefWidth="758.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <columns>
-                                          <TableColumn fx:id="taskColumn" prefWidth="306.4000121951103" style="-fx-background-color: #7B68EE;" text="Задача" />
+                                          <TableColumn fx:id="nameColumn" prefWidth="306.4000121951103" style="-fx-background-color: #7B68EE;" text="Задача" />
                                           <TableColumn fx:id="timeColumn" prefWidth="75.199951171875" style="-fx-background-color: #7B68EE;" text="Время" />
-                                          <TableColumn fx:id="durationTask" prefWidth="176.0" style="-fx-background-color: #7B68EE;" text="Продолжительность" />
+                                          <TableColumn fx:id="durationTaskColumn" prefWidth="176.0" style="-fx-background-color: #7B68EE;" text="Продолжительность" />
                                           <TableColumn fx:id="importanceColumn" prefWidth="105.60003662109375" style="-fx-background-color: #7B68EE;" text="Важность" />
                                           <TableColumn fx:id="statusColumn" prefWidth="89.5999755859375" style="-fx-background-color: #7B68EE;" text="Завершено" />
                                        </columns>

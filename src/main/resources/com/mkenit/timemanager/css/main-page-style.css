@@ -5,15 +5,17 @@
 
 .button:hover {
     -fx-background-color: #6393E7;
+    -fx-background-radius: 5em;
 }
+
 
 .button:pressed {
     -fx-background-color: #165DDB;
+    transition: color 9999999s
 }
 
 .button:focused {
     -fx-background-color: #165DDB;
-    -fx-border-color: #165DDB;
     -fx-background-radius: 5em;
 }
 
