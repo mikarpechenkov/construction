@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
+
 import java.util.GregorianCalendar;
 
 public class Task {
@@ -14,14 +15,14 @@ public class Task {
     private GregorianCalendar startTime;
     private Duration duration;
     private Priority importance;
-    private SimpleBooleanProperty finished;
+    private boolean finished;
 
     public Task(String name, GregorianCalendar startTime, Duration duration, Priority importance) {
         this.name = name;
         this.startTime = startTime;
         this.duration = duration;
         this.importance = importance;
-        finished=new SimpleBooleanProperty(false);
+        finished = false;
     }
 
     public Task() {
@@ -29,7 +30,7 @@ public class Task {
         startTime = new GregorianCalendar();
         duration = Duration.minutes(1);
         importance = Priority.ORDINARY_IMPORTANT;
-        finished=new SimpleBooleanProperty(false);
+        finished = false;
     }
 
     public String getName() {
@@ -64,10 +65,11 @@ public class Task {
         this.importance = importance;
     }
 
-    public SimpleBooleanProperty isFinished(){
+    public boolean isFinished() {
         return finished;
     }
+
     public void setStatus(boolean finished) {
-        this.finished.set(finished);
+        this.finished = finished;
     }
 }

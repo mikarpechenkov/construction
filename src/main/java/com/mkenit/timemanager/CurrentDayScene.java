@@ -3,6 +3,7 @@ package com.mkenit.timemanager;
 import com.mkenit.timemanager.models.Priority;
 import com.mkenit.timemanager.models.Task;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -117,11 +118,8 @@ public class CurrentDayScene implements Initializable {
         statusColumn.setCellFactory(column -> new CheckBoxTableCell<>());
         statusColumn.setCellValueFactory(cellData -> {
             Task cellValue = cellData.getValue();
-            BooleanProperty property = cellValue.isFinished();
-
-            // Add listener to handler change
+            BooleanProperty property = new SimpleBooleanProperty(cellValue.isFinished());
             property.addListener((observable, oldValue, newValue) -> cellValue.setStatus(newValue));
-
             return property;
         });
     }
