@@ -1,13 +1,9 @@
 package com.mkenit.timemanager.models;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableBooleanValue;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.CheckBox;
-import javafx.util.Callback;
-import javafx.util.Duration;
-
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Task {
@@ -28,7 +24,7 @@ public class Task {
     public Task() {
         name = "Без названия";
         startTime = new GregorianCalendar();
-        duration = Duration.minutes(1);
+        duration = Duration.ofMinutes(1);
         importance = Priority.ORDINARY_IMPORTANT;
         finished = false;
     }
@@ -49,10 +45,6 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public Duration getDuration() {
-        return duration;
-    }
-
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
@@ -71,5 +63,51 @@ public class Task {
 
     public void setStatus(boolean finished) {
         this.finished = finished;
+    }
+
+    public String getFormattedTime() {
+        return new SimpleDateFormat("hh:mm a").format(startTime.getTime());
+    }
+
+    public String getFormattedDate() {
+        GregorianCalendar now = new GregorianCalendar();
+        SimpleDateFormat formattedDate = new SimpleDateFormat();
+
+        int dayDuration = (int) now.toZonedDateTime().toLocalDate().
+                until(startTime.toZonedDateTime(), ChronoUnit.DAYS);
+
+        switch (dayDuration) {
+            case -2 -> formattedDate.applyLocalizedPattern("Позавчера hh:mm a");
+            case -1 -> formattedDate.applyLocalizedPattern("Вчера hh:mm a");
+            case 0 -> formattedDate.applyLocalizedPattern("Сегодня hh:mm a");
+            case 1 -> formattedDate.applyLocalizedPattern("Завтра hh:mm a");
+            case 2 -> formattedDate.applyLocalizedPattern("Послезавтра hh:mm a");
+            default -> {
+                if (startTime.get(Calendar.YEAR) == now.get(Calendar.YEAR))
+                    if (startTime.get(Calendar.WEEK_OF_YEAR) == now.get(Calendar.WEEK_OF_YEAR))
+                        formattedDate.applyLocalizedPattern("EEEE hh:mm a");
+                    else
+                        formattedDate.applyLocalizedPattern("d MMM hh:mm a");
+                else
+                    formattedDate.applyLocalizedPattern("d/MM/y hh:mm a");
+            }
+        }
+
+        return formattedDate.format(startTime.getTime());
+    }
+
+    public String getFormattedDuration(){
+        if(duration.toHours()>0)
+            return duration.toHours()+ " ч "+duration.toMinutesPart()+" мин";
+        else
+            return duration.toMinutes()+" мин";
+    }
+
+    public String getFormattedImportance(){
+        return switch (importance){
+            case ORDINARY_IMPORTANT -> "Обычная";
+            case LOW_IMPORTANT -> "Низкая";
+            case VERY_IMPORTANT -> "Высокая";
+        };
     }
 }

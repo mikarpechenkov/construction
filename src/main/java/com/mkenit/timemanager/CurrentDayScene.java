@@ -4,7 +4,8 @@ import com.mkenit.timemanager.models.Priority;
 import com.mkenit.timemanager.models.Task;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,10 +20,10 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.ResourceBundle;
@@ -35,7 +36,7 @@ public class CurrentDayScene implements Initializable {
     @FXML
     private Button currentDayMenuItem;
     @FXML
-    private TableColumn<Task, Integer> durationTaskColumn;
+    private TableColumn<Task, String> durationTaskColumn;
     @FXML
     private TableColumn<Task, String> importanceColumn;
     @FXML
@@ -104,17 +105,40 @@ public class CurrentDayScene implements Initializable {
     }
 
     private void addTasks() {
-        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2020, Calendar.DECEMBER, 15, 20, 50), Duration.minutes(45), Priority.ORDINARY_IMPORTANT);
+        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 25, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT);
         ObservableList<Task> list = FXCollections.observableArrayList(task1);
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
-        timeColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("startTime"));
-        durationTaskColumn.setCellValueFactory(new PropertyValueFactory<Task, Integer>("duration"));
-        importanceColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("importance"));
-        statusColumnFactory();
+        timeColumnValues();
+        durationColumnValues();
+        importanceColumnValues();
+        statusColumnValues();
         tableOfTasks.setItems(list);
     }
 
-    private void statusColumnFactory() {
+    private void importanceColumnValues(){
+        importanceColumn.setCellValueFactory(cellData->{
+            Task cellValue=cellData.getValue();
+            StringProperty property=new SimpleStringProperty(cellValue.getFormattedImportance());
+            return property;
+        });
+    }
+
+    private void durationColumnValues(){
+        durationTaskColumn.setCellValueFactory(cellData->{
+            Task cellValue=cellData.getValue();
+            StringProperty property=new SimpleStringProperty(cellValue.getFormattedDuration());
+            return property;
+        });
+    }
+
+    private void timeColumnValues(){
+        timeColumn.setCellValueFactory(cellData->{
+            Task cellValue=cellData.getValue();
+            StringProperty property=new SimpleStringProperty(cellValue.getFormattedTime());
+            return property;
+        });
+    }
+    private void statusColumnValues() {
         statusColumn.setCellFactory(column -> new CheckBoxTableCell<>());
         statusColumn.setCellValueFactory(cellData -> {
             Task cellValue = cellData.getValue();
