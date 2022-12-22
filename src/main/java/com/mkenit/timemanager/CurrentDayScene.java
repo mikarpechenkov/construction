@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -59,6 +60,7 @@ public class CurrentDayScene implements Initializable {
     private Parent timerContent;
     private Parent settingsContent;
 
+    private ObservableList<Task> listOfTasks;
 
     @FXML
     private void selectAllTasksPage() {
@@ -100,50 +102,56 @@ public class CurrentDayScene implements Initializable {
         timerContent = loadPage("Timer");
         settingsContent = loadPage("Settings");
         tableOfTasks.setEditable(true);
+        listOfTasks = FXCollections.observableArrayList();
+        listOfTasks.addListener(new ListChangeListener<Task>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends Task> c) {
+                tableOfTasks.setItems(listOfTasks);
+            }
+        });
         //Потом убрать
         addTasks();
     }
 
+
     private void addTasks() {
-        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 25, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT);
-        ObservableList<Task> list = FXCollections.observableArrayList(task1);
+        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT);
+        Task task2 = new Task("Ангстрем сходить", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 15, 20), Duration.ofMinutes(45), Priority.VERY_IMPORTANT);
+
+        listOfTasks.addAll(task2,task1);
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
         timeColumnValues();
         durationColumnValues();
         importanceColumnValues();
         statusColumnValues();
-        tableOfTasks.setItems(list);
+        tableOfTasks.setItems(listOfTasks);
     }
 
-    private void importanceColumnValues(){
-        importanceColumn.setCellValueFactory(cellData->{
-            Task cellValue=cellData.getValue();
-            StringProperty property=new SimpleStringProperty(cellValue.getFormattedImportance());
-            return property;
-        });
+    private void importanceColumnValues() {
+        importanceColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFormattedImportance()));
     }
 
-    private void durationColumnValues(){
-        durationTaskColumn.setCellValueFactory(cellData->{
-            Task cellValue=cellData.getValue();
-            StringProperty property=new SimpleStringProperty(cellValue.getFormattedDuration());
-            return property;
-        });
+    private void durationColumnValues() {
+        durationTaskColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFormattedDuration()));
     }
 
-    private void timeColumnValues(){
-        timeColumn.setCellValueFactory(cellData->{
-            Task cellValue=cellData.getValue();
-            StringProperty property=new SimpleStringProperty(cellValue.getFormattedTime());
-            return property;
-        });
+    private void timeColumnValues() {
+        timeColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getFormattedTime()));
     }
+
     private void statusColumnValues() {
         statusColumn.setCellFactory(column -> new CheckBoxTableCell<>());
         statusColumn.setCellValueFactory(cellData -> {
             Task cellValue = cellData.getValue();
             BooleanProperty property = new SimpleBooleanProperty(cellValue.isFinished());
-            property.addListener((observable, oldValue, newValue) -> cellValue.setStatus(newValue));
+            property.addListener((observable, oldValue, newValue) ->{
+                cellValue.setStatus(newValue);
+                if(newValue==true)
+                    listOfTasks.remove(cellValue);
+            } );
             return property;
         });
     }
