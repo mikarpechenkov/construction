@@ -1,7 +1,9 @@
 package com.mkenit.timemanager;
 
 import com.mkenit.timemanager.models.Priority;
+import com.mkenit.timemanager.models.StatusAndDateTasksComparator;
 import com.mkenit.timemanager.models.Task;
+import javafx.beans.Observable;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,6 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -102,10 +105,15 @@ public class CurrentDayScene implements Initializable {
         timerContent = loadPage("Timer");
         settingsContent = loadPage("Settings");
         tableOfTasks.setEditable(true);
-        listOfTasks = FXCollections.observableArrayList();
+
+        listOfTasks = FXCollections.observableArrayList(item->new Observable[] {
+                new SimpleBooleanProperty(item.isFinished())
+        });
+
         listOfTasks.addListener(new ListChangeListener<Task>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Task> c) {
+                System.out.println("Изменения зафиксированы");
                 tableOfTasks.setItems(listOfTasks);
             }
         });
@@ -118,13 +126,15 @@ public class CurrentDayScene implements Initializable {
         Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT);
         Task task2 = new Task("Ангстрем сходить", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 15, 20), Duration.ofMinutes(45), Priority.VERY_IMPORTANT);
 
-        listOfTasks.addAll(task2,task1);
+        listOfTasks.addAll(task2, task1);
+        SortedList<Task> taskSortedList = new SortedList<>(listOfTasks, new StatusAndDateTasksComparator());
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
         timeColumnValues();
         durationColumnValues();
         importanceColumnValues();
         statusColumnValues();
         tableOfTasks.setItems(listOfTasks);
+
     }
 
     private void importanceColumnValues() {
@@ -147,11 +157,10 @@ public class CurrentDayScene implements Initializable {
         statusColumn.setCellValueFactory(cellData -> {
             Task cellValue = cellData.getValue();
             BooleanProperty property = new SimpleBooleanProperty(cellValue.isFinished());
-            property.addListener((observable, oldValue, newValue) ->{
+            property.addListener((observable, oldValue, newValue) -> {
                 cellValue.setStatus(newValue);
-                if(newValue==true)
-                    listOfTasks.remove(cellValue);
-            } );
+
+            });
             return property;
         });
     }
