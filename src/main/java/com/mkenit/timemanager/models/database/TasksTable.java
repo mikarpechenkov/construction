@@ -14,30 +14,37 @@ import java.util.LinkedList;
 public class TasksTable {
     private Connection connection;
 
-    private LinkedList<Task> todayTasks=new LinkedList<>();
+    private LinkedList<Task> todayTasks = new LinkedList<>();
+
+    private LinkedList<Task> allTasks = new LinkedList<>();
 
     public LinkedList<Task> getTodayTasks() {
         loadTodayTasks();
         return todayTasks;
     }
 
-    private void loadTodayTasks() {
+    public LinkedList<Task> getAllTasks() {
+        loadAllTasks();
+        return allTasks;
+    }
+
+    private void loadAllTasks() {
         String sql = """
-                SELECT * FROM tasks;
+                SELECT * FROM tasks WHERE status=FALSE;
                 """;
         try {
             connection = ConnectionManager.open();
             Statement statemnet = connection.createStatement();
             ResultSet result = statemnet.executeQuery(sql);
-            while (result.next()){
-                String name=result.getString("name");
-                GregorianCalendar startTime=new GregorianCalendar();
+            while (result.next()) {
+                String name = result.getString("name");
+                GregorianCalendar startTime = new GregorianCalendar();
                 startTime.setTime(result.getDate("start_time"));
-                Duration duration=Duration.ofMinutes(result.getInt("duration"));
-                Priority priority=Priority.valueOf(result.getString("importance"));
-                boolean finished=result.getBoolean("status");
-                Task tmp=new Task(name,startTime,duration,priority,finished);
-                todayTasks.add(tmp);
+                Duration duration = Duration.ofMinutes(result.getInt("duration"));
+                Priority priority = Priority.valueOf(result.getString("importance"));
+                boolean finished = result.getBoolean("status");
+                Task tmp = new Task(name, startTime, duration, priority, finished);
+                allTasks.add(tmp);
             }
             result.close();//Добавить обработку ошибок
         } catch (Exception e) {
@@ -46,15 +53,19 @@ public class TasksTable {
             try {
                 if (connection != null)
                     connection.close();
-            }catch(Exception ignore){}
+            } catch (Exception ignore) {
+            }
         }
     }
 
+    private void loadTodayTasks(){
+
+    }
 }
 
-class Main{
+class Main {
     public static void main(String[] args) {
-        TasksTable tasksTable=new TasksTable();
+        TasksTable tasksTable = new TasksTable();
         System.out.println(tasksTable.getTodayTasks());
     }
 }

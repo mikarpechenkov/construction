@@ -1,5 +1,6 @@
 package com.mkenit.timemanager;
 
+import com.mkenit.timemanager.models.Timer;
 import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
@@ -21,8 +22,6 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 public class TimerScene implements Initializable {
-
-    public static final int MAX_MINUTES = 180;
 
     @FXML
     private Button cancelButton;
@@ -48,55 +47,28 @@ public class TimerScene implements Initializable {
     @FXML
     private Button startButton;
 
-    @FXML
-    private Button timerMenuItem;
-
-    private TreeMap<Integer, String> timerDisplayMap;
-
-    private int currentSecond;
-
     private Timeline timerTimeline;
+
+    private Timer timerModel = new Timer();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ObservableList<String> minutesList = FXCollections.observableArrayList();
-        ObservableList<String> secondsList = FXCollections.observableArrayList();
-
-        //Заполняем наши листы для комбобоксов значениями
-        for (int i = 0; i <= MAX_MINUTES; i++) {
-            if (i <= 9){
-                minutesList.add("0" + i);
-                secondsList.add("0"+i);
-            }else {
-                if(i<=60)
-                    secondsList.add(String.valueOf(i));
-                minutesList.add(String.valueOf(i));
-            }
-        }
         //Добавляем пункты в комбобоксы
-        minutesInput.setItems(minutesList);
-        minutesInput.setValue("00");
-        secondsInput.setItems(secondsList);
-        secondsInput.setValue("00");
-
-        //Делаем числовое представление красивым
-        timerDisplayMap = new TreeMap<>();
-        for (int i = 0; i <= MAX_MINUTES; i++)
-            if (i >= 0 && i < 10)
-                timerDisplayMap.put(i, "0" + i);
-            else
-                timerDisplayMap.put(i, String.valueOf(i));
-
+        minutesInput.setItems(FXCollections.observableArrayList(timerModel.getMinutesList()));
+        minutesInput.setValue(timerModel.getViewOfPresentMinutes());
+        secondsInput.setItems(FXCollections.observableArrayList(timerModel.getSecondsList()));
+        secondsInput.setValue(timerModel.getViewOfPresentSeconds());
     }
 
     public void startButtonClick() {
-        currentSecond = minutesToSeconds(Integer.parseInt(minutesInput.getValue()),
+        timerModel.setCurrentSeconds(Integer.parseInt(minutesInput.getValue()),
                 Integer.parseInt(secondsInput.getValue()));
-        if (currentSecond != 0)
+        if (timerModel.getCurrentSeconds() != 0) {
             scrollUp();
-        try {
-            startCountdown();
-        } catch (Exception ex) {
+            try {
+                startCountdown();
+            } catch (Exception ex) {
+            }
         }
     }
 
@@ -111,21 +83,20 @@ public class TimerScene implements Initializable {
     private void startCountdown() {
         timerTimeline = new Timeline(new KeyFrame(Duration.seconds(0), event -> {
             try {
+                timerModel.countOneSecond();
                 setTimerValues();
-                currentSecond--;
             } catch (Exception ex) {
             }
         }), new KeyFrame(Duration.seconds(1)));
-        timerTimeline.setCycleCount(currentSecond);
+        timerTimeline.setCycleCount(timerModel.getCurrentSeconds());
         timerTimeline.play();
         timerTimeline.setOnFinished(event -> scrollDown());
     }
 
 
     private void setTimerValues() {
-        HashMap<String, Integer> minutesAndSeconds = secondsToMinutes(currentSecond);
-        outputSeconds.setText(timerDisplayMap.get(minutesAndSeconds.get("seconds")));
-        outputMinutes.setText(timerDisplayMap.get(minutesAndSeconds.get("minutes")));
+        outputSeconds.setText(timerModel.getViewOfPresentSeconds());
+        outputMinutes.setText(timerModel.getViewOfPresentMinutes());
     }
 
     //Анимация для смены Пэйнов таймера
@@ -165,18 +136,5 @@ public class TimerScene implements Initializable {
 
         ParallelTransition parallelTransition = new ParallelTransition(transition1, transition2);
         parallelTransition.play();
-    }
-
-    private int minutesToSeconds(int minutes, int seconds) {
-        return minutes * 60 + seconds;
-    }
-
-    private HashMap<String, Integer> secondsToMinutes(int currentSecond) {
-        int minutes = currentSecond / 60;
-        currentSecond = currentSecond % 60;
-        HashMap<String, Integer> minutesAndSeconds = new HashMap<>();
-        minutesAndSeconds.put("minutes", minutes);
-        minutesAndSeconds.put("seconds", currentSecond);
-        return minutesAndSeconds;
     }
 }
