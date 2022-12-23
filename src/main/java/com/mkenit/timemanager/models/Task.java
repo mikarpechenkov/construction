@@ -111,4 +111,14 @@ public class Task {
         };
     }
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", startTime= " + getFormattedDate() +
+                ", duration=" + duration.toMinutes()+
+                ", importance=" + importance +
+                ", finished=" + finished +
+                '}';
+    }
 }
