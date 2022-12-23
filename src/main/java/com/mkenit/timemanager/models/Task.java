@@ -13,12 +13,12 @@ public class Task {
     private Priority importance;
     private boolean finished;
 
-    public Task(String name, GregorianCalendar startTime, Duration duration, Priority importance) {
+    public Task(String name, GregorianCalendar startTime, Duration duration, Priority importance, boolean finished) {
         this.name = name;
         this.startTime = startTime;
         this.duration = duration;
         this.importance = importance;
-        finished = false;
+        this.finished = finished;
     }
 
     public Task() {
@@ -110,4 +110,5 @@ public class Task {
             case VERY_IMPORTANT -> "Высокая";
         };
     }
+
 }

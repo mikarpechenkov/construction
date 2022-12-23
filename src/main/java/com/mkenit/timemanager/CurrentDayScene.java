@@ -16,10 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -105,36 +102,32 @@ public class CurrentDayScene implements Initializable {
         timerContent = loadPage("Timer");
         settingsContent = loadPage("Settings");
         tableOfTasks.setEditable(true);
-
-        listOfTasks = FXCollections.observableArrayList(item->new Observable[] {
-                new SimpleBooleanProperty(item.isFinished())
-        });
+        listOfTasks = FXCollections.observableArrayList();
 
         listOfTasks.addListener(new ListChangeListener<Task>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Task> c) {
-                System.out.println("Изменения зафиксированы");
                 tableOfTasks.setItems(listOfTasks);
             }
         });
         //Потом убрать
         addTasks();
+        FXCollections.sort(listOfTasks,new StatusAndDateTasksComparator());
     }
 
 
     private void addTasks() {
-        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT);
-        Task task2 = new Task("Ангстрем сходить", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 15, 20), Duration.ofMinutes(45), Priority.VERY_IMPORTANT);
+        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT,false);
+        Task task2 = new Task("Ангстрем сходить", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 15, 20), Duration.ofMinutes(45), Priority.VERY_IMPORTANT,false);
+        Task task3 = new Task("Сдать долги", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 12, 40), Duration.ofMinutes(80), Priority.LOW_IMPORTANT, false);
 
         listOfTasks.addAll(task2, task1);
-        SortedList<Task> taskSortedList = new SortedList<>(listOfTasks, new StatusAndDateTasksComparator());
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
         timeColumnValues();
         durationColumnValues();
         importanceColumnValues();
         statusColumnValues();
         tableOfTasks.setItems(listOfTasks);
-
     }
 
     private void importanceColumnValues() {
@@ -159,9 +152,11 @@ public class CurrentDayScene implements Initializable {
             BooleanProperty property = new SimpleBooleanProperty(cellValue.isFinished());
             property.addListener((observable, oldValue, newValue) -> {
                 cellValue.setStatus(newValue);
-
+                listOfTasks.remove(cellValue);
+                FXCollections.sort(listOfTasks,new StatusAndDateTasksComparator());
             });
             return property;
         });
     }
+
 }
