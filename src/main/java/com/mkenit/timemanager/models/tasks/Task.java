@@ -1,4 +1,6 @@
-package com.mkenit.timemanager.models;
+package com.mkenit.timemanager.models.tasks;
+
+import com.mkenit.timemanager.models.tasks.Priority;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -6,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Task {
+public class Task implements TaskDriverForBD{
     private String name;
     private GregorianCalendar startTime;
     private Duration duration;
@@ -45,6 +47,29 @@ public class Task {
         this.startTime = startTime;
     }
 
+    public Duration getDuration(){return duration;}
+
+    @Override
+    public String getNameForDB() {
+        return name;
+    }
+
+    @Override
+    public String getStartTimeForDB() {
+        return new SimpleDateFormat("d-MM-yyyy hh:mm").format(startTime.getTime());
+    }
+
+    @Override
+    public int getDurationForDB(){
+        return (int)duration.toMinutes();
+    }
+    @Override
+    public String getImportanceForDB(){
+        return importance.toString();
+    }
+
+    @Override
+    public boolean getStatusForDB(){return finished;}
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
@@ -109,6 +134,30 @@ public class Task {
             case LOW_IMPORTANT -> "Низкая";
             case VERY_IMPORTANT -> "Высокая";
         };
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+
+        if (finished != task.finished) return false;
+        if (!name.equals(task.name)) return false;
+        if (!startTime.equals(task.startTime)) return false;
+        if (!duration.equals(task.duration)) return false;
+        return importance == task.importance;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + startTime.hashCode();
+        result = 31 * result + duration.hashCode();
+        result = 31 * result + importance.hashCode();
+        result = 31 * result + (finished ? 1 : 0);
+        return result;
     }
 
     @Override

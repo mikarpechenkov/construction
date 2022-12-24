@@ -1,13 +1,12 @@
 package com.mkenit.timemanager.models.database;
 
-import com.mkenit.timemanager.models.Priority;
-import com.mkenit.timemanager.models.Task;
+import com.mkenit.timemanager.models.tasks.Priority;
+import com.mkenit.timemanager.models.tasks.Task;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
@@ -36,36 +35,97 @@ public class TasksTable {
             connection = ConnectionManager.open();
             Statement statemnet = connection.createStatement();
             ResultSet result = statemnet.executeQuery(sql);
-            while (result.next()) {
-                String name = result.getString("name");
-                GregorianCalendar startTime = new GregorianCalendar();
-                startTime.setTime(result.getDate("start_time"));
-                Duration duration = Duration.ofMinutes(result.getInt("duration"));
-                Priority priority = Priority.valueOf(result.getString("importance"));
-                boolean finished = result.getBoolean("status");
-                Task tmp = new Task(name, startTime, duration, priority, finished);
-                allTasks.add(tmp);
+            if (result != null) {
+                SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy hh:mm");
+                while (result.next()) {
+                    String name = result.getString("name");
+                    GregorianCalendar startTime = new GregorianCalendar();
+                    startTime.setTime(formatter.parse(result.getString("start_time")));
+                    Duration duration = Duration.ofMinutes(result.getInt("duration"));
+                    Priority priority = Priority.valueOf(result.getString("importance"));
+                    boolean finished = result.getBoolean("status");
+                    Task tmp = new Task(name, startTime, duration, priority, finished);
+                    if (!allTasks.contains(tmp)) allTasks.add(tmp);
+                }
             }
             result.close();//Добавить обработку ошибок
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
             try {
-                if (connection != null)
-                    connection.close();
+                if (connection != null) connection.close();
             } catch (Exception ignore) {
             }
         }
     }
 
-    private void loadTodayTasks(){
+    private void loadTodayTasks() {
+        String sql = """
+                SELECT * FROM tasks WHERE status=FALSE AND start_time LIKE ?;
+                """;
+        SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
+        String todayDate = formatter.format(new Date());
+        try {
+            connection = ConnectionManager.open();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, todayDate + " %");
+            ResultSet result = statement.executeQuery();
+            if (result != null) {
+                formatter.applyPattern("d-MM-yyyy hh:mm");
+                while (result.next()) {
+                    String name = result.getString("name");
+                    GregorianCalendar startTime = new GregorianCalendar();
+                    startTime.setTime(formatter.parse(result.getString("start_time")));
+                    Duration duration = Duration.ofMinutes(result.getInt("duration"));
+                    Priority priority = Priority.valueOf(result.getString("importance"));
+                    boolean finished = result.getBoolean("status");
+                    Task tmp = new Task(name, startTime, duration, priority, finished);
+                    if (!todayTasks.contains(tmp)) todayTasks.add(tmp);
+                }
+            }
+            result.close();//Добавить обработку ошибок
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (Exception ignore) {
+            }
+        }
+    }
 
+    private int addTask(Task task) {
+        String sql = """
+                INSERT INTO TASKS (id, name,start_time,duration,importance, status)
+                VALUES(default,?,?,?,?::importance_enum,?);
+                """;
+        int result=0;
+        try {
+            connection = ConnectionManager.open();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, task.getNameForDB());
+            statement.setString(2, task.getStartTimeForDB());
+            statement.setInt(3,task.getDurationForDB());
+            statement.setString(4, task.getImportanceForDB());
+            statement.setBoolean(5,task.getStatusForDB());
+            result=statement.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (connection != null) connection.close();
+            } catch (Exception ignore) {
+            }
+            finally {
+                return result;
+            }
+        }
     }
 }
 
 class Main {
     public static void main(String[] args) {
         TasksTable tasksTable = new TasksTable();
-        System.out.println(tasksTable.getTodayTasks());
-    }
+        Task task=new Task();
+            }
 }

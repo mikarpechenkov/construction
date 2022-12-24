@@ -1,4 +1,4 @@
-package com.mkenit.timemanager.models;
+package com.mkenit.timemanager.models.tasks;
 
 import java.util.Comparator;
 

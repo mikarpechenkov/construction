@@ -1,4 +1,4 @@
-package com.mkenit.timemanager.models;
+package com.mkenit.timemanager.models.tasks;
 
 public enum Priority {
     VERY_IMPORTANT,

@@ -1,17 +1,14 @@
 package com.mkenit.timemanager;
 
-import com.mkenit.timemanager.models.Priority;
-import com.mkenit.timemanager.models.StatusAndDateTasksComparator;
-import com.mkenit.timemanager.models.Task;
-import javafx.beans.Observable;
+import com.mkenit.timemanager.models.tasks.Priority;
+import com.mkenit.timemanager.models.tasks.StatusAndDateTasksComparator;
+import com.mkenit.timemanager.models.tasks.Task;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
