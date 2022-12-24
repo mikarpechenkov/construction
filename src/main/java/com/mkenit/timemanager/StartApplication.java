@@ -15,9 +15,11 @@ public class StartApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("templates/CurrentDay.fxml"));
         Parent root=fxmlLoader.load();
         Scene scene = new Scene(root, 960, 540);
+        CurrentDayScene mainPageController=new CurrentDayScene();
         stage.setTitle("Текущие задачи");
         stage.setScene(scene);
         stage.setResizable(false);
+        stage.setOnHidden(e->mainPageController.appShutdown());
         stage.show();
     }
 

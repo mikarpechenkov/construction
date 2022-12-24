@@ -1,7 +1,6 @@
 package com.mkenit.timemanager;
 
 import com.mkenit.timemanager.models.database.TasksTable;
-import com.mkenit.timemanager.models.tasks.Priority;
 import com.mkenit.timemanager.models.tasks.StatusAndDateTasksComparator;
 import com.mkenit.timemanager.models.tasks.Task;
 import javafx.beans.property.BooleanProperty;
@@ -14,7 +13,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -22,9 +23,6 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -65,25 +63,45 @@ public class CurrentDayScene implements Initializable {
 
     @FXML
     private void selectAllTasksPage() {
-        if (allTasksContent != null)
+        if (allTasksContent != null){
             borderPane.setCenter(allTasksContent);
+            saveChangeToDB();
+        }
+
     }
 
     @FXML
     private void selectCurrentDayPage() {
         borderPane.setCenter(currentDayContent);
+        saveChangeToDB();
     }
 
     @FXML
     private void selectTimerPage() {
-        if (timerContent != null)
+        if (timerContent != null){
             borderPane.setCenter(timerContent);
+            saveChangeToDB();
+        }
+
     }
 
     @FXML
     private void selectSettingsPage() {
-        if (settingsContent != null)
+        if (settingsContent != null){
             borderPane.setCenter(settingsContent);
+            saveChangeToDB();
+        }
+
+    }
+
+    public void appShutdown(){
+        saveChangeToDB();
+    }
+    private void saveChangeToDB() {
+        if (dataBase.saveChanges(changedTasks))
+            System.out.println("Изменения успешно сохранены");
+        else
+            System.out.println("Не удалось сохранить изменения в БД");
     }
 
     private Parent loadPage(String pageName) {
@@ -108,10 +126,13 @@ public class CurrentDayScene implements Initializable {
         listOfTasks.addListener(new ListChangeListener<Task>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Task> c) {
+                while(c.next()){
+                    if(c.wasRemoved())
+                        changedTasks.addAll(c.getRemoved());
+                }
                 tableOfTasks.setItems(listOfTasks);
             }
         });
-
         addTasksToTable();
         FXCollections.sort(listOfTasks,new StatusAndDateTasksComparator());
     }
@@ -155,4 +176,5 @@ public class CurrentDayScene implements Initializable {
             return property;
         });
     }
+
 }

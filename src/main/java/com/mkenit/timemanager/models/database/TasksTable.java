@@ -38,7 +38,7 @@ public class TasksTable {
             Statement statemnet = connection.createStatement();
             ResultSet result = statemnet.executeQuery(sql);
             if (result != null) {
-                SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy hh:mm");
+                SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy HH:mm");
                 while (result.next()) {
                     String name = result.getString("name");
                     GregorianCalendar startTime = new GregorianCalendar();
@@ -73,7 +73,7 @@ public class TasksTable {
             statement.setString(1, todayDate + " %");
             ResultSet result = statement.executeQuery();
             if (result != null) {
-                formatter.applyPattern("d-MM-yyyy hh:mm");
+                formatter.applyPattern("d-MM-yyyy HH:mm");
                 while (result.next()) {
                     String name = result.getString("name");
                     GregorianCalendar startTime = new GregorianCalendar();
@@ -183,11 +183,20 @@ public class TasksTable {
         }
     }
 
-    public void saveChanges(List<Task> changedTasks) {
-        for (Task task : changedTasks)
-            if (existSameTask(task))
-                updateTaskStatus(task);
-            else
-                addTask(task);
+    public boolean saveChanges(List<Task> changedTasks) {
+        boolean result = true;
+        try {
+            for (Task task : changedTasks)
+                if (existSameTask(task))
+                    updateTaskStatus(task);
+                else
+                    addTask(task);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            result = false;
+        } finally {
+            return result;
+        }
+
     }
 }

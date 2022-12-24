@@ -56,7 +56,7 @@ public class Task implements TaskDriverForBD{
 
     @Override
     public String getStartTimeForDB() {
-        return new SimpleDateFormat("d-MM-yyyy hh:mm").format(startTime.getTime());
+        return new SimpleDateFormat("d-MM-yyyy HH:mm").format(startTime.getTime());
     }
 
     @Override
