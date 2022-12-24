@@ -1,5 +1,6 @@
 package com.mkenit.timemanager;
 
+import com.mkenit.timemanager.models.database.TasksTable;
 import com.mkenit.timemanager.models.tasks.Priority;
 import com.mkenit.timemanager.models.tasks.StatusAndDateTasksComparator;
 import com.mkenit.timemanager.models.tasks.Task;
@@ -24,6 +25,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class CurrentDayScene implements Initializable {
@@ -56,8 +58,10 @@ public class CurrentDayScene implements Initializable {
     private Parent allTasksContent;
     private Parent timerContent;
     private Parent settingsContent;
-
+    private TasksTable dataBase=new TasksTable();
     private ObservableList<Task> listOfTasks;
+
+    private LinkedList<Task> changedTasks=new LinkedList<>();
 
     @FXML
     private void selectAllTasksPage() {
@@ -107,18 +111,14 @@ public class CurrentDayScene implements Initializable {
                 tableOfTasks.setItems(listOfTasks);
             }
         });
-        //Потом убрать
-        addTasks();
+
+        addTasksToTable();
         FXCollections.sort(listOfTasks,new StatusAndDateTasksComparator());
     }
 
 
-    private void addTasks() {
-        Task task1 = new Task("Доделать КПО", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 8, 50), Duration.ofMinutes(95), Priority.ORDINARY_IMPORTANT,false);
-        Task task2 = new Task("Ангстрем сходить", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 15, 20), Duration.ofMinutes(45), Priority.VERY_IMPORTANT,false);
-        Task task3 = new Task("Сдать долги", new GregorianCalendar(2022, Calendar.DECEMBER, 22, 12, 40), Duration.ofMinutes(80), Priority.LOW_IMPORTANT, false);
-
-        listOfTasks.addAll(task2, task1);
+    private void addTasksToTable() {
+        listOfTasks.addAll(dataBase.getTodayTasks());
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
         timeColumnValues();
         durationColumnValues();
@@ -155,5 +155,4 @@ public class CurrentDayScene implements Initializable {
             return property;
         });
     }
-
 }
