@@ -1,6 +1,6 @@
 package com.mkenit.timemanager;
 
-import com.mkenit.timemanager.models.Timer;
+import com.mkenit.timemanager.models.TimerModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
@@ -49,7 +49,7 @@ public class TimerScene implements Initializable {
 
     private Timeline timerTimeline;
 
-    private Timer timerModel = new Timer();
+    private TimerModel timerModel = new TimerModel();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -1,10 +1,9 @@
 package com.mkenit.timemanager.models;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-public class Timer {
+public class TimerModel {
     public static final int MAX_MINUTES = 180;
     public static final int MAX_SECONDS = 60;
     private TreeMap<Integer, String> timerDisplayMap;
@@ -14,7 +13,7 @@ public class Timer {
     private String viewOfPresentMinutes;
     private int currentSeconds;
 
-    public Timer() {
+    public TimerModel() {
         minutesList = new LinkedList<>();
         secondsList = new LinkedList<>();
         timerDisplayMap = new TreeMap<>();
@@ -24,7 +23,7 @@ public class Timer {
     }
 
     private void initMinutesAndSecondsValues() {
-        for (int i = 0; i <= Timer.MAX_MINUTES; i++)
+        for (int i = 0; i <= TimerModel.MAX_MINUTES; i++)
             if (i >= 0 && i < 10)
                 timerDisplayMap.put(i, "0" + i);
             else

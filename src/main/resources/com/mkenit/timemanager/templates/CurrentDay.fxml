@@ -87,7 +87,7 @@
                            <children>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <Button fx:id="AddTask" layoutX="21.0" layoutY="15.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #8A2BE2;" text="Добавить задачу" textFill="#fffefe">
+                                    <Button fx:id="addTaskButton" onAction="#addTaskButtonClicked" layoutX="21.0" layoutY="15.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #8A2BE2;" text="Добавить задачу" textFill="#fffefe">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>

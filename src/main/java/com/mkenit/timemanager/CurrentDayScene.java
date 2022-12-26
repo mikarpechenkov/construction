@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -20,6 +21,8 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +31,7 @@ import java.util.ResourceBundle;
 
 public class CurrentDayScene implements Initializable {
     @FXML
-    private Button AddTask;
+    private Button addTaskButton;
     @FXML
     private Button allTasksMenuItem;
     @FXML
@@ -97,6 +100,7 @@ public class CurrentDayScene implements Initializable {
     public void appShutdown(){
         saveChangeToDB();
     }
+
     private void saveChangeToDB() {
         if (dataBase.saveChanges(changedTasks))
             System.out.println("Изменения успешно сохранены");
@@ -140,6 +144,7 @@ public class CurrentDayScene implements Initializable {
 
     private void addTasksToTable() {
         listOfTasks.addAll(dataBase.getTodayTasks());
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<Task, String>("name"));
         timeColumnValues();
         durationColumnValues();
@@ -175,6 +180,25 @@ public class CurrentDayScene implements Initializable {
             });
             return property;
         });
+    }
+
+    @FXML
+    public void addTaskButtonClicked(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("templates/AddTask.fxml"));
+        Parent root= null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root, 752, 540);
+        Stage stage=new Stage();
+        stage.setTitle("Добавить задачу");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.UNDECORATED);
+        stage.setOnHidden(windowEvent -> listOfTasks.addAll(dataBase.getTodayTasks()));
+        stage.show();
     }
 
 }
