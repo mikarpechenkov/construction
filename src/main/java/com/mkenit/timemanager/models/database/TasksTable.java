@@ -184,9 +184,6 @@ public class TasksTable {
     }
 
     public void saveChanges(List<Task> changedTasks) {
-
-        System.out.println("да");
-
         for (Task task : changedTasks)
             if (existSameTask(task))
                 updateTaskStatus(task);
