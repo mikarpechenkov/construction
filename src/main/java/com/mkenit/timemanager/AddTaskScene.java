@@ -49,7 +49,7 @@ public class AddTaskScene implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         dateInput.getEditor().setDisable(true);
         dateInput.setValue(LocalDate.now());
-        nameInput.clear();
+        nameInput.setText("Без названия");
         startHour.setItems(FXCollections.observableArrayList(model.getHoursList()));
         startHour.setValue((LocalTime.now().getHour() < 10 ? "0" : "") + LocalTime.now().getHour());
         startMinute.setItems(FXCollections.observableArrayList(model.getMinutesList()));

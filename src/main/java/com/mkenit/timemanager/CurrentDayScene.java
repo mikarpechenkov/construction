@@ -62,7 +62,7 @@ public class CurrentDayScene implements Initializable {
     private TasksTable dataBase=new TasksTable();
     private ObservableList<Task> listOfTasks;
 
-    private LinkedList<Task> changedTasks=new LinkedList<>();
+    private static LinkedList<Task> changedTasks=new LinkedList<>();
 
     @FXML
     private void selectAllTasksPage() {
@@ -102,10 +102,7 @@ public class CurrentDayScene implements Initializable {
     }
 
     private void saveChangeToDB() {
-        if (dataBase.saveChanges(changedTasks))
-            System.out.println("Изменения успешно сохранены");
-        else
-            System.out.println("Не удалось сохранить изменения в БД");
+        dataBase.saveChanges(changedTasks);
     }
 
     private Parent loadPage(String pageName) {
@@ -197,7 +194,10 @@ public class CurrentDayScene implements Initializable {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.initStyle(StageStyle.UNDECORATED);
-        stage.setOnHidden(windowEvent -> listOfTasks.addAll(dataBase.getTodayTasks()));
+        stage.setOnHidden(windowEvent -> {
+            listOfTasks.clear();
+            listOfTasks.addAll(dataBase.getTodayTasks());
+        });
         stage.show();
     }
 

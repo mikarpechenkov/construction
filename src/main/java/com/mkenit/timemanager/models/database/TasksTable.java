@@ -96,7 +96,7 @@ public class TasksTable {
         }
     }
 
-    public int addTask(Task task) {
+    private int addTask(Task task) {
         String sql = """
                 INSERT INTO TASKS (id, name,start_time,duration,importance, status)
                 VALUES(default,?,?,?,?::importance_enum,?);
@@ -123,7 +123,7 @@ public class TasksTable {
         }
     }
 
-    public int updateTaskStatus(Task task) {
+    private int updateTaskStatus(Task task) {
         String sql = """
                 UPDATE TASKS\s
                 SET status=?\s
@@ -154,7 +154,7 @@ public class TasksTable {
         }
     }
 
-    public boolean existSameTask(Task task) {
+    private boolean existSameTask(Task task) {
         boolean result = false;
         String sql = """
                 SELECT id FROM tasks\s
@@ -183,20 +183,20 @@ public class TasksTable {
         }
     }
 
-    public boolean saveChanges(List<Task> changedTasks) {
-        boolean result = true;
-        try {
-            for (Task task : changedTasks)
-                if (existSameTask(task))
-                    updateTaskStatus(task);
-                else
-                    addTask(task);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            result = false;
-        } finally {
-            return result;
-        }
+    public void saveChanges(List<Task> changedTasks) {
 
+        System.out.println("да");
+
+        for (Task task : changedTasks)
+            if (existSameTask(task))
+                updateTaskStatus(task);
+            else {
+                addTask(task);
+            }
     }
+
+    public void saveChanges(Task changedTask) {
+        addTask(changedTask);
+    }
+
 }

@@ -90,7 +90,7 @@ public class AddTaskModel {
     public void addTask() {
         makeTask();
         TasksTable dataBase = new TasksTable();
-        dataBase.addTask(task);
+        dataBase.saveChanges(task);
     }
 
     private int hoursToMinutes(int hours, int minutes) {
