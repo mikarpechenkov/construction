@@ -41,7 +41,7 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="AddTask" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" style="-fx-background-color: #8A2BE2;" text="Добавить задачу" textFill="#fffefe">
+                        <Button fx:id="addButtonTask" onAction="#addTaskButtonClicked" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="130.0" style="-fx-background-color: #8A2BE2;" text="Добавить задачу" textFill="#fffefe">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -50,13 +50,13 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <children>
-                        <TableView fx:id="tableOfTasks" prefHeight="374.4" prefWidth="758.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="tableOfTasks" layoutX="-221.0" layoutY="23.0" prefHeight="395.2" prefWidth="752.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <columns>
-                              <TableColumn fx:id="taskColumn" prefWidth="284.0" style="-fx-background-color: #7B68EE;" text="Задача" />
-                              <TableColumn fx:id="timeColumn" prefWidth="146.4000244140625" style="-fx-background-color: #7B68EE;" text="Дата и время" />
-                              <TableColumn fx:id="durationTask" prefWidth="129.60003662109375" style="-fx-background-color: #7B68EE;" text="Продолжительность" />
-                              <TableColumn fx:id="importanceColumn" prefWidth="105.60003662109375" style="-fx-background-color: #7B68EE;" text="Важность" />
-                              <TableColumn fx:id="statusColumn" prefWidth="89.5999755859375" style="-fx-background-color: #7B68EE;" text="Завершено" />
+                              <TableColumn fx:id="nameColumn" prefWidth="276.800048828125" style="-fx-background-color: #7B68EE;" text="Задача" />
+                              <TableColumn fx:id="timeColumn" prefWidth="145.5999755859375" style="-fx-background-color: #7B68EE;" text="Дата и время" />
+                              <TableColumn fx:id="durationTaskColumn" prefWidth="134.4000244140625" style="-fx-background-color: #7B68EE;" text="Продолжительность" />
+                              <TableColumn fx:id="importanceColumn" prefWidth="105.0" style="-fx-background-color: #7B68EE;" text="Важность" />
+                              <TableColumn fx:id="statusColumn" prefWidth="87.199951171875" style="-fx-background-color: #7B68EE;" text="Завершено" />
                            </columns>
                         </TableView>
                      </children>

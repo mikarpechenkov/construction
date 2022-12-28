@@ -68,6 +68,7 @@ public class CurrentDayScene implements Initializable {
     @FXML
     private void selectAllTasksPage() {
         if (allTasksContent != null){
+            AllTasksScene.updateTasks();
             borderPane.setCenter(allTasksContent);
             saveChangeToDB();
         }
@@ -76,6 +77,8 @@ public class CurrentDayScene implements Initializable {
 
     @FXML
     private void selectCurrentDayPage() {
+        listOfTasks.clear();
+        listOfTasks.addAll(dataBase.getTodayTasks());
         borderPane.setCenter(currentDayContent);
         saveChangeToDB();
     }
@@ -198,6 +201,7 @@ public class CurrentDayScene implements Initializable {
         stage.setOnHidden(windowEvent -> {
             listOfTasks.clear();
             listOfTasks.addAll(dataBase.getTodayTasks());
+            FXCollections.sort(listOfTasks,new StatusAndDateTasksComparator());
         });
         stage.show();
     }
