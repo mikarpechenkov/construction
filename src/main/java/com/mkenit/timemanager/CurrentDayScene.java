@@ -125,9 +125,6 @@ public class CurrentDayScene implements Initializable {
         tableOfTasks.setEditable(true);
         listOfTasks = FXCollections.observableArrayList();
 
-        allTasksMenuItem.pseudoClassStateChanged(PseudoClass.getPseudoClass("pressed"),false);
-        currentDayMenuItem.pseudoClassStateChanged(PseudoClass.getPseudoClass("pressed"),true);
-
         listOfTasks.addListener(new ListChangeListener<Task>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Task> c) {
