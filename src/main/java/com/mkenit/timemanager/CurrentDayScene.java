@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -123,6 +124,9 @@ public class CurrentDayScene implements Initializable {
         settingsContent = loadPage("Settings");
         tableOfTasks.setEditable(true);
         listOfTasks = FXCollections.observableArrayList();
+
+        allTasksMenuItem.pseudoClassStateChanged(PseudoClass.getPseudoClass("pressed"),false);
+        currentDayMenuItem.pseudoClassStateChanged(PseudoClass.getPseudoClass("pressed"),true);
 
         listOfTasks.addListener(new ListChangeListener<Task>() {
             @Override
