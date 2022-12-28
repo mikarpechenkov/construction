@@ -2,6 +2,7 @@ package com.mkenit.timemanager.models.tasks;
 
 import com.mkenit.timemanager.models.tasks.Priority;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -55,8 +56,8 @@ public class Task implements TaskDriverForBD{
     }
 
     @Override
-    public String getStartTimeForDB() {
-        return new SimpleDateFormat("d-MM-yyyy HH:mm").format(startTime.getTime());
+    public Timestamp getStartTimeForDB() {
+        return new Timestamp(startTime.getTimeInMillis());
     }
 
     @Override

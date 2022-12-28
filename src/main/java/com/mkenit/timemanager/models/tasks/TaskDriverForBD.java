@@ -1,8 +1,10 @@
 package com.mkenit.timemanager.models.tasks;
 
+import java.sql.Timestamp;
+
 public interface TaskDriverForBD {
     String getNameForDB();
-    String getStartTimeForDB();
+    Timestamp getStartTimeForDB();
     int getDurationForDB();
     String getImportanceForDB();
     boolean getStatusForDB();

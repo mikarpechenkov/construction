@@ -14,12 +14,15 @@ public final class ConnectionManager {
 
     public static Connection open() {
         try {
+            Class.forName("org.h2.Driver");
             return DriverManager.getConnection(
                     PropertiesDB.getProperty(URL_KEY),
                     PropertiesDB.getProperty(USERNAME_KEY),
                     PropertiesDB.getProperty(PASSWORD_KEY)
             );
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

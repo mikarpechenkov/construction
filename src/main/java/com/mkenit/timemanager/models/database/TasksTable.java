@@ -3,12 +3,15 @@ package com.mkenit.timemanager.models.database;
 import com.mkenit.timemanager.models.tasks.Priority;
 import com.mkenit.timemanager.models.tasks.Task;
 
-import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.time.Duration;
-import java.util.*;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TasksTable {
     private Connection connection;
@@ -31,24 +34,21 @@ public class TasksTable {
 
     private void loadAllTasks() {
         String sql = """
-                SELECT * FROM tasks WHERE status=FALSE;
+                SELECT * FROM TASKS WHERE status=FALSE;
                 """;
         try {
             connection = ConnectionManager.open();
             Statement statemnet = connection.createStatement();
             ResultSet result = statemnet.executeQuery(sql);
-            if (result != null) {
-                SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy HH:mm");
-                while (result.next()) {
-                    String name = result.getString("name");
-                    GregorianCalendar startTime = new GregorianCalendar();
-                    startTime.setTime(formatter.parse(result.getString("start_time")));
-                    Duration duration = Duration.ofMinutes(result.getInt("duration"));
-                    Priority priority = Priority.valueOf(result.getString("importance"));
-                    boolean finished = result.getBoolean("status");
-                    Task tmp = new Task(name, startTime, duration, priority, finished);
-                    allTasks.add(tmp);
-                }
+            while (result.next()) {
+                String name = result.getString("name");
+                GregorianCalendar startTime = new GregorianCalendar();
+                startTime.setTime(result.getTimestamp("start_time"));
+                Duration duration = Duration.ofMinutes(result.getInt("duration"));
+                Priority priority = Priority.valueOf(result.getString("importance"));
+                boolean finished = result.getBoolean("status");
+                Task tmp = new Task(name, startTime, duration, priority, finished);
+                allTasks.add(tmp);
             }
             result.close();//Добавить обработку ошибок
         } catch (Exception e) {
@@ -63,27 +63,22 @@ public class TasksTable {
 
     private void loadTodayTasks() {
         String sql = """
-                SELECT * FROM tasks WHERE status=FALSE AND start_time LIKE ?;
+                SELECT * FROM tasks WHERE status=FALSE AND FORMATDATETIME(START_TIME,'yyyy-MM-d') = ?;
                 """;
-        SimpleDateFormat formatter = new SimpleDateFormat("d-MM-yyyy");
-        String todayDate = formatter.format(new Date());
         try {
             connection = ConnectionManager.open();
             PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, todayDate + " %");
+            statement.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
             ResultSet result = statement.executeQuery();
-            if (result != null) {
-                formatter.applyPattern("d-MM-yyyy HH:mm");
-                while (result.next()) {
-                    String name = result.getString("name");
-                    GregorianCalendar startTime = new GregorianCalendar();
-                    startTime.setTime(formatter.parse(result.getString("start_time")));
-                    Duration duration = Duration.ofMinutes(result.getInt("duration"));
-                    Priority priority = Priority.valueOf(result.getString("importance"));
-                    boolean finished = result.getBoolean("status");
-                    Task tmp = new Task(name, startTime, duration, priority, finished);
-                    todayTasks.add(tmp);
-                }
+            while (result.next()) {
+                String name = result.getString("name");
+                GregorianCalendar startTime = new GregorianCalendar();
+                startTime.setTime(result.getTimestamp("start_time")); //проверить, работает ли
+                Duration duration = Duration.ofMinutes(result.getInt("duration"));
+                Priority priority = Priority.valueOf(result.getString("importance"));
+                boolean finished = result.getBoolean("status");
+                Task tmp = new Task(name, startTime, duration, priority, finished);
+                todayTasks.add(tmp);
             }
             result.close();//Добавить обработку ошибок
         } catch (Exception e) {
@@ -99,14 +94,14 @@ public class TasksTable {
     private int addTask(Task task) {
         String sql = """
                 INSERT INTO TASKS (id, name,start_time,duration,importance, status)
-                VALUES(default,?,?,?,?::importance_enum,?);
+                VALUES(default,?,?,?,?,?);
                 """;
         int result = 0;
         try {
             connection = ConnectionManager.open();
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, task.getNameForDB());
-            statement.setString(2, task.getStartTimeForDB());
+            statement.setTimestamp(2, task.getStartTimeForDB());
             statement.setInt(3, task.getDurationForDB());
             statement.setString(4, task.getImportanceForDB());
             statement.setBoolean(5, task.getStatusForDB());
@@ -130,7 +125,7 @@ public class TasksTable {
                 WHERE name=?\s
                 AND start_time=?\s
                 AND duration=?\s
-                AND importance=?::importance_enum;\s
+                AND importance=?;\s
                 """;
         int result = 0;
         try {
@@ -138,7 +133,7 @@ public class TasksTable {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setBoolean(1, task.getStatusForDB());
             statement.setString(2, task.getNameForDB());
-            statement.setString(3, task.getStartTimeForDB());
+            statement.setTimestamp(3, task.getStartTimeForDB());
             statement.setInt(4, task.getDurationForDB());
             statement.setString(5, task.getImportanceForDB());
             result = statement.executeUpdate();
@@ -161,13 +156,13 @@ public class TasksTable {
                 WHERE name=?\s
                 AND start_time=?\s
                 AND duration=?\s
-                AND importance=?::importance_enum;\s
+                AND importance=?;\s
                 """;
         try {
             connection = ConnectionManager.open();
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, task.getNameForDB());
-            statement.setString(2, task.getStartTimeForDB());
+            statement.setTimestamp(2, task.getStartTimeForDB());
             statement.setInt(3, task.getDurationForDB());
             statement.setString(4, task.getImportanceForDB());
             result = statement.executeQuery().next();
@@ -185,8 +180,7 @@ public class TasksTable {
 
     public void saveChanges(List<Task> changedTasks) {
         for (Task task : changedTasks)
-            if (existSameTask(task))
-                updateTaskStatus(task);
+            if (existSameTask(task)) updateTaskStatus(task);
             else {
                 addTask(task);
             }

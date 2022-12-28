@@ -46,8 +46,8 @@ public class CurrentDayTest extends ApplicationTest{
 
     @Test
     public void testAddTask(){
-        Assertions.assertNotNull(lookup("#AddTask").query());
-        clickOn("#AddTask");
+        Assertions.assertNotNull(lookup("#addTaskButton").query());
+        clickOn("#addTaskButton");
     }
 
     @Test
@@ -106,12 +106,12 @@ public class CurrentDayTest extends ApplicationTest{
     public void testAll(){
         Assertions.assertNotNull(lookup("#currentDayMenuItem").query());
         clickOn("#currentDayMenuItem");
-        Assertions.assertNotNull(lookup("#AddTask").query());
-        clickOn("#AddTask");
+        Assertions.assertNotNull(lookup("#addTaskButton").query());
+        clickOn("#addTaskButton");
         Assertions.assertNotNull(lookup("#allTasksMenuItem").query());
         clickOn("#allTasksMenuItem");
-        Assertions.assertNotNull(lookup("#AddTask").query());
-        clickOn("#AddTask");
+        Assertions.assertNotNull(lookup("#addTaskButton").query());
+        clickOn("#addTaskButton");
         Assertions.assertNotNull(lookup("#timerMenuItem").query());
         clickOn("#timerMenuItem");
         Assertions.assertNotNull(lookup("#timerMenuItem").query());
